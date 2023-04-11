@@ -1,11 +1,36 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+bool issolvable(vector<vector<int>> goal_matrix, vector<vector<int>> intial_matrix){
+    unordered_map<int, int> priority_map;
+    const int n = goal_matrix.size();
+    int temp = 0;
+    
+    for (int i=0; i<n; i++){
+        for (int j=0; j<n; j++){
+            priority_map[goal_matrix[i][j]] = temp;
+            temp++;
+        }
+    }
+    
+    for (int i=0; i<n; i++){
+        for (int j=0; j<n; j++){
+            // check priority
+        }
+    }
+    
+    return count%2 == 0;
+}
+
 int checkheuristic(vector<vector<int>> matrix, vector<vector<int>> goal_matrix){
     int count = 0;
+    const int n = goal_matrix.size();
 
-    for (int i=0; i<3; i++){
-        for (int j=0; j<3; j++){
+    for (int i=0; i<n; i++){
+        for (int j=0; j<n; j++){
+            if (matrix[i][j] == 0){
+                continue;
+            }
             if (matrix[i][j] != goal_matrix[i][j]){
                 count++;
             }
@@ -18,15 +43,16 @@ int checkheuristic(vector<vector<int>> matrix, vector<vector<int>> goal_matrix){
 
 int checkHeuristic(vector<vector<int>> matrix, vector<vector<int>> goal_matrix){
     int count = 0;
+    const int sz = goal_matrix.size();
 
-    for (int i=0; i<3; i++){
-        for (int j=0; j<3; j++){
+    for (int i=0; i<sz; i++){
+        for (int j=0; j<sz; j++){
             if (matrix[i][j] != 0){
                 int x, y;
                 int flag = 0;
                 
-                for (int m=0; m<3; m++){
-                    for (int n=0; n<3; n++){
+                for (int m=0; m<sz; m++){
+                    for (int n=0; n<sz; n++){
                         if (matrix[i][j] == goal_matrix[m][n]){
                             x = m;
                             y = n;
@@ -52,8 +78,9 @@ int checkHeuristic(vector<vector<int>> matrix, vector<vector<int>> goal_matrix){
 
 void display(vector<vector<int>> matrix, vector<vector<int>> goal_matrix, int level, int type){
     cout<<"\n";
-    for(int i=0; i<3; i++){
-        for (int j=0; j<3; j++){
+    const int sz = goal_matrix.size();
+    for(int i=0; i<sz; i++){
+        for (int j=0; j<sz; j++){
             cout<<matrix[i][j]<<" ";
         }
         cout<<endl;
@@ -75,8 +102,9 @@ void display(vector<vector<int>> matrix, vector<vector<int>> goal_matrix, int le
 vector<vector<int>> transform_matrix(vector<vector<int>> matrix, vector<vector<int>> goal_matrix, set<vector<vector<int>>> &matrix_set, int level, int type){
     // coordinate of 0;
     int x, y;
-    for(int i=0; i<3; i++){
-        for(int j=0; j<3; j++){
+    const int sz = goal_matrix.size();
+    for(int i=0; i<sz; i++){
+        for(int j=0; j<sz; j++){
             if (matrix[i][j] == 0){
                 x = i;
                 y = j;
@@ -210,26 +238,29 @@ vector<vector<int>> transform_matrix(vector<vector<int>> matrix, vector<vector<i
 }
 
 int main(){
-    cout<<"\n\n\t\t 8 puzzle game";
+    cout<<"\n\n\t\t N*N - 1 puzzle game";
+    int sz;
+    cout<<"Enter the size of matrix : ";
+    cin>sz;
 
-    vector<vector<int>> matrix(3, vector<int>(3, 0));
-    vector<vector<int>> goal_matrix(3, vector<int>(3, 0));
+    vector<vector<int>> matrix(sz, vector<int>(3, 0));
+    vector<vector<int>> goal_matrix(sz, vector<int>(3, 0));
 
     set<vector<vector<int>>> matrix_set;
     matrix_set.insert(matrix);
 
     cout<<"\n\nEnter initial matrix : ";
 
-    for(int i = 0; i <3; i++){
-        for (int j = 0; j <3; j++){
+    for(int i = 0; i <sz; i++){
+        for (int j = 0; j <sz; j++){
             cin>>matrix[i][j];
         }
     }
 
     cout<<"\nEnter goal matrix : ";
 
-    for(int i = 0; i <3; i++){
-        for (int j = 0; j <3; j++){
+    for(int i = 0; i <sz; i++){
+        for (int j = 0; j <sz; j++){
             cin>>goal_matrix[i][j];
         }
     }
@@ -239,6 +270,10 @@ int main(){
     cout<<"\n\nEnter your choice : ";
     cin>>choice;
     int loop = 0;
+    
+    if (issolvable(goal_matrix, matrix) == false){
+        return 0;
+    }
 
     if (choice == 1){
         int heuristic = checkHeuristic(matrix, goal_matrix);
